@@ -1,21 +1,34 @@
 {
   "name": "dump-facebook-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "A dump FB chatbot",
   "main": "server.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "./node_modules/.bin/nodemon --watch src server.js"
   },
   "author": "vanducld@gmail.com",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "dotenv": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^4.9.0",
-    "eslint-config-airbnb": "^16.1.0"
+    "eslint-config-airbnb": "^16.1.0",
+    "nodemon": "^1.14.12"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "docs/*"
+    ],
+    "delay": "2500"
+  },
+  "repository": {
+    "url": "https://github.com/vanduc1102/dump-facebook-bot/"
   }
 }

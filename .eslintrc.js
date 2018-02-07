@@ -40,6 +40,8 @@ module.exports = {
     'one-var': [0, 'never'],
     'one-var-declaration-per-line': [2, 'always'],
     'padded-blocks': 0,
+    'no-plusplus':0,
+    'no-continue':0,
     'space-before-function-paren': [2, {
       'anonymous': 'always',
       'named': 'never',
@@ -68,6 +70,7 @@ module.exports = {
     element: true,
     inject: true,
     io: true,
+    require:true,
     moment: true,
     Modernizr: true,
     Promise: true,
