@@ -1,12 +1,15 @@
 'use strict';
 
 const messagesBuilder = require('./messages-builder');
-const token = process.env.FB_PAGE_ACCESS_TOKEN;
+const fbPageAccessToken = process.env.FB_PAGE_ACCESS_TOKEN;
+const webhookPrivateKey = process.env.PRIVATE_KEY;
+const witAiClient = require('./witai-client');
+
 
 function webook(app) {
 // for Facebook verification
   app.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === process.env.PRIVATE_KEY) {
+    if (req.query['hub.verify_token'] === webhookPrivateKey) {
       res.send(req.query['hub.challenge']);
     }
     res.send('Error, wrong token');
@@ -19,15 +22,19 @@ function webook(app) {
       let sender = event.sender.id;
       if (event.message && event.message.text) {
         let text = event.message.text;
+        witAiClient.getMessage(text).then(res =>{
+          console.log(JSON.stringify(res));
+          messagesBuilder.sendGenericMessage(sender, text);
+        });
         if (text === 'Generic') {
-          messagesBuilder.sendGenericMessage(sender);
+          messagesBuilder.sendGenericMessage(sender, text);
           continue;
         }
         messagesBuilder.sendTextMessage(sender, 'Text received, echo: ' + text.substring(0, 200));
       }
       if (event.postback) {
         let text = JSON.stringify(event.postback);
-        messagesBuilder.sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), token);
+        messagesBuilder.sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), fbPageAccessToken);
         continue;
       }
     }
