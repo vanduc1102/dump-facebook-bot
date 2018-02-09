@@ -1,13 +1,11 @@
 'use strict';
 
 const messagesBuilder = require('./messages-builder');
-const fbPageAccessToken = process.env.FB_PAGE_ACCESS_TOKEN;
 const webhookPrivateKey = process.env.PRIVATE_KEY;
 const witAiClient = require('./witai-client');
 
 
 function webook(app) {
-// for Facebook verification
   app.get('/webhook/', function (req, res) {
     if (req.query['hub.verify_token'] === webhookPrivateKey) {
       res.send(req.query['hub.challenge']);
@@ -22,19 +20,19 @@ function webook(app) {
       let sender = event.sender.id;
       if (event.message && event.message.text) {
         let text = event.message.text;
-        witAiClient.getMessage(text).then(res =>{
-          console.log(JSON.stringify(res));
-          messagesBuilder.sendGenericMessage(sender, text);
+        witAiClient.getMessage(text).then(res => {
+          let entities = res.entities;
+          let searchText = entities && entities.search_query && entities.search_query[0].value ? entities.search_query[0].value : '';
+          if (searchText) {
+            messagesBuilder.sendGenericMessage(sender, searchText);
+          } else {
+            messagesBuilder.sendTextMessage(sender, 'Sorry, I don\'t understand : ' + text.substring(0, 200));
+          }
         });
-        if (text === 'Generic') {
-          messagesBuilder.sendGenericMessage(sender, text);
-          continue;
-        }
-        messagesBuilder.sendTextMessage(sender, 'Text received, echo: ' + text.substring(0, 200));
       }
       if (event.postback) {
         let text = JSON.stringify(event.postback);
-        messagesBuilder.sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), fbPageAccessToken);
+        messagesBuilder.sendTextMessage(sender, 'Thank you.');
         continue;
       }
     }

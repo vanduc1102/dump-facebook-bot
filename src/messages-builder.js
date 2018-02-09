@@ -98,10 +98,29 @@ function createCarouselMessage(posts) {
   let templates = MSG_TEMPLATE;
   let elements = [];
   posts.forEach((post) =>{
+    console.log('post : ', post);
     elements.push({
       'title': post.title,
-      'subtitle': post.subtitle,
-      'image_url': 'http://lorempixel.com/400/400/?url=' + post.link
+      'subtitle': post.description,
+      'image_url': (post.thumbnailImage && post.thumbnailImage.link) || 'https://secure-assets.rubiconproject.com/campaigns/7725/50/20/68/1475124163campaign_file_lhtc0d.jpg',
+      'default_action': {
+        'type': 'web_url',
+        'url': post.link,
+        'messenger_extensions': false,
+        'webview_height_ratio': 'FULL'
+      },
+      'buttons': [
+        {
+          'type': 'web_url',
+          'url': post.link,
+          'title': 'View Website'
+        },
+        {
+          'type': 'postback',
+          'title': 'Like it?',
+          'payload': 'Yes'
+        }
+      ]
     });
   });
   templates.attachment.payload.elements = elements;
